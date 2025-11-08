@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TumCode Coding Hub - Professional development environment with AI assistance, compilers, and code tools">
+    <meta name="keywords" content="coding, programming, development, IDE, compiler, AI assistant, code tools">
+    <meta name="author" content="Golden Apple Technologies">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="TumCode Coding Hub">
+    <meta property="og:description" content="Professional coding environment with advanced tools">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>TumCode</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body.dark {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #000000;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark header {
+            background-color: #000000;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+        }
+        
+        #hdLogo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        #hdLogo span {
+            color: #000000;
+        }
+        
+        body.dark #hdLogo span {
+            color: #ffffff;
+        }
+        
+        /* Menu Button */
+        #menubtn {
+            background: none;
+            border: 2px solid #000000;
+            font-size: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        body.dark #menubtn {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #menubtn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark #menubtn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Main Menu Sidebar */
+        #menu {
+            position: fixed;
+            top: 0;
+            left: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-right: 2px solid #000000;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark #menu {
+            background-color: #000000;
+            border-right: 2px solid #ffffff;
+            box-shadow: 2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #menu.active {
+            left: 0;
+        }
+        
+        #menuext {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #menuext {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        .menu-content {
+            padding: 60px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .menu-content button {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        body.dark .menu-content button {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+        
+        .menu-content button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .menu-content button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Settings Sidebar */
+        #settings {
+            position: fixed;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-left: 2px solid #000000;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 60px 30px 30px;
+        }
+        
+        body.dark #settings {
+            background-color: #000000;
+            border-left: 2px solid #ffffff;
+            box-shadow: -2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #settings.active {
+            right: 0;
+        }
+        
+        #settings-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #settings-close {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #themeset {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark #themeset {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        #themeset:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark #themeset:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        input[type="search"] {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #000000;
+            border-radius: 25px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark input[type="search"] {
+            border: 2px solid #ffffff;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        input[type="search"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #000000;
+        }
+        
+        body.dark input[type="search"]:focus {
+            box-shadow: 0 0 0 2px #ffffff;
+        }
+        
+        /* Tools Grid */
+        .tools-grid {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .tool-card {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        body.dark .tool-card {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        .tool-card:hover {
+            background-color: #000000;
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        body.dark .tool-card:hover {
+            background-color: #ffffff;
+            color: #000000;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.2);
+        }
+        
+        .tool-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Hidden Logo */
+        #hdLogo[style*="opacity: 0"] {
+            display: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #menu, #settings {
+                width: 80%;
+            }
+            
+            #menu {
+                left: -80%;
+            }
+            
+            #settings {
+                right: -80%;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                padding: 12px 15px;
+            }
+            
+            #hdLogo {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #menu, #settings {
+                width: 100%;
+            }
+            
+            #menu {
+                left: -100%;
+            }
+            
+            #settings {
+                right: -100%;
+            }
+            
+            .menu-content, #settings {
+                padding: 60px 15px 15px;
+            }
+            
+            .search-container {
+                width: 95%;
+            }
+            
+            .tools-grid {
+                width: 95%;
+            }
+        }
+        
+        /* Overlay for when menu/settings are open */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        body.dark .overlay {
+            background-color: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body id="body">
+    <!-- Overlay for closing menus -->
+    <div class="overlay" id="overlay"></div>
+    
+    <header>
+        <div id="header-content">
+            <div id="hdLogo">Tum<span>Code</span></div>
+        </div>
+        <input type="button" value="☰" id="menubtn">
+    </header>
+    
+    <!-- Main Menu Sidebar -->
+    <div id="menu">
+        <input type="button" value="&times;" id="menuext">
+        <div class="menu-content">
+            <button>Home</button>
+            <button>Projects</button>
+            <button onclick="location.href='docs.html'">Docs</button>
+            <button id="settings-btn">Settings</button>
+            <button>Feedback</button>
+        </div>
+    </div>
+    
+    <!-- Settings Sidebar -->
+    <div id="settings">
+        <input type="button" value="&times;" id="settings-close">
+        <h2>Settings</h2>
+        <button id="themeset">EYE CARE</button>
+        <!-- Add more settings options here if needed -->
+    </div>
+    
+    <div id="hdLogo" style="opacity: 0;">TumCode</div>
+    
+    <div class="search-container">
+        <input type="search" id="searchInput" placeholder="Search tools and features...">
+    </div>
+    
+    <div class="tools-grid" id="toolsGrid">
+        <!-- Tools will be populated by JavaScript -->
+    </div>
+    
+    <script>
+        // Tools data with page links
+        const tools = [
+            { name: "GitHub Repository Downloader", disabled: false, alert: "This Program Is To Be Launched Soon, Stay Tuned For Updates And More", page: "github_downloader.html" },
+            { name: "CODDIT AI V 3.6", disabled: false, page: "coddit_v3.6.html" },
+            { name: "Universal Document Creator", disabled: false, page: "doc_creator.html" },
+            { name: "Source code extractor", disabled: false, page: "source_extractor.html" },
+            { name: "Terminal", disabled: false, page: "terminal.html" },
+            { name: "Error Solver", disabled: false, page: "error_solver.html" },
+            { name: "Html compiler Pro+", disabled: false, page: "html_compiler_pro.html" },
+            { name: "Html Compiler [Nt-01]", disabled: false, page: "html_compiler_nt01.html" },
+            { name: "CPP Run [c++ Nt-03]", disabled: false, page: "cpp_runner.html" },
+            { name: "Markdown Viewer", disabled: false, page: "markdown_viewer.html" },
+            { name: "Onion browser", disabled: true, alert: "for security purposes, this service was disabled for usual browsers, download the TumTools App to access the Service", page: "onion_browser.html" },
+            { name: "APK Studio", disabled: false, page: "apk_studio.html" },
+            { name: "Coddit AI V 4.0 [Gold]", disabled: false, page: "coddit_v4.0.html" },
+            { name: "VPN Creator", disabled: false, page: "vpn_creator.html" },
+            { name: "NETWORK SECURITY", disabled: false, page: "network_security.html" },
+            { name: "CODDIT Gen 1", disabled: false, page: "coddit_gen1.html" },
+            { name: "Color Picker - In Code", disabled: false, page: "color_picker_code.html" },
+            { name: "Color Picker", disabled: false, page: "color_picker.html" }
+        ];
+
+        // Initialize tools grid
+        function initializeToolsGrid() {
+            const toolsGrid = document.getElementById('toolsGrid');
+            toolsGrid.innerHTML = '';
+            
+            tools.forEach(tool => {
+                const toolCard = document.createElement('a');
+                toolCard.className = 'tool-card';
+                toolCard.textContent = tool.name;
+                
+                if (tool.disabled) {
+                    toolCard.classList.add('disabled');
+                } else {
+                    toolCard.href = tool.page;
+                }
+                
+                if (tool.alert) {
+                    toolCard.addEventListener('click', (e) => {
+                        if (tool.disabled) {
+                            e.preventDefault();
+                        }
+                        alert(tool.alert);
+                    });
+                }
+                
+                toolsGrid.appendChild(toolCard);
+            });
+        }
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const toolCards = document.querySelectorAll('.tool-card');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                toolCards.forEach(card => {
+                    const toolName = card.textContent.toLowerCase();
+                    if (toolName.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Menu and settings functionality
+        function setupMenuAndSettings() {
+            const menu = document.getElementById('menu');
+            const settings = document.getElementById('settings');
+            const menuBtn = document.getElementById('menubtn');
+            const menuExt = document.getElementById('menuext');
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsClose = document.getElementById('settings-close');
+            const overlay = document.getElementById('overlay');
+            
+            function closeAllMenus() {
+                menu.classList.remove('active');
+                settings.classList.remove('active');
+                overlay.style.display = 'none';
+            }
+            
+            menuBtn.addEventListener('click', () => {
+                menu.classList.add('active');
+                overlay.style.display = 'block';
+            });
+            
+            menuExt.addEventListener('click', closeAllMenus);
+            
+            settingsBtn.addEventListener('click', () => {
+                settings.classList.add('active');
+                menu.classList.remove('active');
+            });
+            
+            settingsClose.addEventListener('click', closeAllMenus);
+            
+            overlay.addEventListener('click', closeAllMenus);
+        }
+
+        // Theme toggle functionality
+        function setupThemeToggle() {
+            const body = document.getElementById('body');
+            const toggleButton = document.getElementById('themeset');
+            let isDarkMode = false;
+
+            toggleButton.addEventListener('click', () => {
+                if (isDarkMode) {
+                    body.classList.remove('dark');
+                    toggleButton.textContent = 'EYE CARE';
+                } else {
+                    body.classList.add('dark');
+                    toggleButton.textContent = 'EYE CARE ✓';
+                }
+                isDarkMode = !isDarkMode;
+            });
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeToolsGrid();
+            setupSearch();
+            setupMenuAndSettings();
+            setupThemeToggle();
+        });
+    </script>
+</body>
+</html>
