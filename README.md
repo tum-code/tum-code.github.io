@@ -12,4 +12,4 @@
 [![banner](favicon.ico)](https://tum-code.github.io)
 
 # Advanced Language Models 
-[![codditad](ad coddit.gif)](https://tum-code.github.io/coddit_v3.6)
+![coddit](coddit_ad.gif)
