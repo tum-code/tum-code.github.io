@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TumCode Terminal - Web-based terminal with common commands">
+    <meta name="keywords" content="terminal, command line, shell, tumcode">
+    <meta name="author" content="Golden Apple Technologies">
+    <title>TumCode Terminal</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #000;
+            border-bottom: 2px solid #00ff00;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #hdLogo {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        #hdLogo span {
+            color: #00ff00;
+        }
+        
+        #back-btn {
+            background: none;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            font-size: 16px;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        #back-btn:hover {
+            background-color: #00ff00;
+            color: #000;
+        }
+        
+        /* Terminal Container */
+        .terminal-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            background-color: #333;
+            padding: 8px 15px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-body {
+            background-color: black;
+            flex: 1;
+            padding: 0px;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .terminal-output {
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .terminal-line {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .prompt {
+            color: #00ff00;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        
+        .command-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            flex: 1;
+            outline: none;
+            caret-color: #00ff00;
+        }
+        
+        .file-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+        
+        .file-icon {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        .directory { color: #00a8ff; }
+        .file { color: #fff; }
+        .executable { color: #00ff00; }
+        
+        /* Editor Styles */
+        .editor-container {
+            margin: 10px 0;
+            border: 1px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .editor-header {
+            background-color: #333;
+            padding: 5px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        
+        .editor-body {
+            background-color: #1a1a1a;
+            padding: 10px;
+        }
+        
+        .editor-textarea {
+            width: 100%;
+            height: 300px;
+            background-color: #1a1a1a;
+            color: #fff;
+            border: none;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+        }
+        
+        .editor-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .editor-btn {
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .editor-btn:hover {
+            background: #444;
+        }
+        
+        .editor-btn.save {
+            background: #00a8ff;
+            border-color: #00a8ff;
+        }
+        
+        .editor-btn.save:hover {
+            background: #0097e6;
+        }
+        
+        /* Help Panel */
+        .help-panel {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        
+        .help-title {
+            color: #00ff00;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .command-item {
+            margin-bottom: 5px;
+        }
+        
+        .command-name {
+            color: #00a8ff;
+            font-weight: bold;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terminal-body {
+                padding: 0px;
+            }
+            
+            .command-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="hdLogo">Tum<span>Code</span> Terminal</div>
+        <button id="back-btn" onclick="location.href='index.html'">Back to Hub</button>
+    </header>
+    
+<div class="terminal-container">
+<div class="terminal-body" id="terminalBody">
+<div class="terminal-output"></div> 
+<div class="terminal-line" id="currentLine">
+     <span class="prompt">$</span>
+     <input type="text" class="command-input" id="commandInput" autofocus>
+</div>
+</div>
+</div>
+    
+    <script>
+        // Terminal functionality
+        class Terminal {
+            constructor() {
+                this.terminalBody = document.getElementById('terminalBody');
+                this.commandInput = document.getElementById('commandInput');
+                this.currentLine = document.getElementById('currentLine');
+                this.history = [];
+                this.historyIndex = -1;
+                this.currentDirectory = ' ';
+                this.isEditing = false;
+                this.editorFile = null;
+                
+                // Load data from localStorage
+                this.loadFromStorage();
+                
+                this.setupEventListeners();
+                this.displayWelcome();
+            }
+            
+            loadFromStorage() {
+                // Load file system
+                const savedFileSystem = localStorage.getItem('tumcode-terminal-fs');
+                if (savedFileSystem) {
+                    this.fileSystem = JSON.parse(savedFileSystem);
+                } else {
+                    this.fileSystem = this.initializeFileSystem();
+                }
+                
+                // Load history
+                const savedHistory = localStorage.getItem('tumcode-terminal-history');
+                if (savedHistory) {
+                    this.history = JSON.parse(savedHistory);
+                }
+                
+                // Load current directory
+                const savedDirectory = localStorage.getItem('tumcode-terminal-cwd');
+                if (savedDirectory) {
+                    this.currentDirectory = savedDirectory;
+                }
+            }
+            
+            saveToStorage() {
+                localStorage.setItem('tumcode-terminal-fs', JSON.stringify(this.fileSystem));
+                localStorage.setItem('tumcode-terminal-history', JSON.stringify(this.history));
+                localStorage.setItem('tumcode-terminal-cwd', this.currentDirectory);
+            }
+            
+            initializeFileSystem() {
+                return {
+                    ' ': {
+                        type: 'directory',
+                        children: {
+                            'projects': {
+                                type: 'directory',
+                                children: {
+                                    'website': {
+                                        type: 'directory',
+                                        children: {
+                                            'index.html': { type: 'file', content: '<!DOCTYPE html>\n<html>\n<head>\n    <title>My Website</title>\n</head>\n<body>\n    <h1>Welcome to my website</h1>\n</body>\n</html>' },
+                                            'styles.css': { type: 'file', content: 'body { font-family: Arial; margin: 40px; }' }
+                                        }
+                                    },
+                                    'script.js': { type: 'file', content: 'console.log("Hello, World!");' },
+                                    'hello.py': { type: 'file', content: 'print("Hello, World!")\n\n# Simple addition function\ndef add(a, b):\n    return a + b\n\nresult = add(5, 3)\nprint(f"5 + 3 = {result}")' },
+                                    'hello.cpp': { type: 'file', content: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    \n    int a = 5;\n    int b = 3;\n    int sum = a + b;\n    \n    std::cout << a << " + " << b << " = " << sum << std::endl;\n    \n    return 0;\n}' }
+                                }
+                            },
+                            'documents': {
+                                type: 'directory',
+                                children: {
+                                    'readme.txt': { type: 'file', content: 'Welcome to TumCode Terminal\nThis is a simulated file system.' },
+                                    'notes.md': { type: 'file', content: '# My Notes\n- Task 1: Finish project\n- Task 2: Test terminal' }
+                                }
+                            },
+                            'tumcode-info.txt': { type: 'file', content: 'TumCode Development Hub\nVersion 2.1.0\nCreated by Golden Apple Technologies' }
+                        }
+                    }
+                };
+            }
+            
+            setupEventListeners() {
+                this.commandInput.addEventListener('keydown', (e) => {
+                    if (this.isEditing) return;
+                    
+                    if (e.key === 'Enter') {
+                        this.executeCommand();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.navigateHistory(-1);
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this.navigateHistory(1);
+                    } else if (e.key === 'Tab') {
+                        e.preventDefault();
+                        this.autoComplete();
+                    }
+                });
+                
+                // Keep focus on input when clicking anywhere in terminal
+                this.terminalBody.addEventListener('click', () => {
+                    if (!this.isEditing) {
+                        this.commandInput.focus();
+                    }
+                });
+            }
+            
+            displayWelcome() {
+                // Welcome message is already in HTML
+            }
+            
+            executeCommand() {
+                const command = this.commandInput.value.trim();
+                if (command === '') {
+                    this.addNewInputLine();
+                    return;
+                }
+                
+                // Add command to history
+                this.history.push(command);
+                this.historyIndex = this.history.length;
+                
+                // Display the command in the terminal
+                const commandLine = document.createElement('div');
+                commandLine.className = 'terminal-line';
+                commandLine.innerHTML = `<span class="prompt"> ${this.currentDirectory}$</span> ${command}`;
+                this.currentLine.parentNode.insertBefore(commandLine, this.currentLine);
+                
+                // Process the command
+                this.processCommand(command);
+                
+                // Clear input and add new line
+                this.commandInput.value = '';
+                this.addNewInputLine();
+                
+                // Save to storage
+                this.saveToStorage();
+                
+                // Scroll to bottom
+                this.terminalBody.scrollTop = this.terminalBody.scrollHeight;
+            }
+            
+            processCommand(command) {
+                const parts = command.split(' ');
+                const cmd = parts[0].toLowerCase();
+                const args = parts.slice(1);
+                
+                switch(cmd) {
+                    case 'help':
+                        this.showHelp();
+                        break;
+                    case 'clear':
+                        this.clearTerminal();
+                        break;
+                    case 'ls':
+                        this.listFiles(args);
+                        break;
+                    case 'pwd':
+                        this.showCurrentDirectory();
+                        break;
+                    case 'cd':
+                        this.changeDirectory(args);
+                        break;
+                    case 'cat':
+                        this.showFileContent(args);
+                        break;
+                    case 'echo':
+                        this.echoText(args);
+                        break;
+                    case 'date':
+                        this.showDate();
+                        break;
+                    case 'whoami':
+                        this.showUser();
+                        break;
+                    case 'mkdir':
+                        this.createDirectory(args);
+                        break;
+                    case 'touch':
+                        this.createFile(args);
+                        break;
+                    case 'rm':
+                        this.removeFile(args);
+                        break;
+                    case 'find':
+                        this.findFiles(args);
+                        break;
+                    case 'calc':
+                        this.calculate(args);
+                        break;
+                    case 'history':
+                        this.showHistory();
+                        break;
+                    case 'theme':
+                        this.changeTheme(args);
+                        break;
+                    case 'py':
+                        this.runPython(args);
+                        break;
+                    case 'cpp':
+                        this.runCpp(args);
+                        break;
+                    case 'edt':
+                        this.editFile(args);
+                        break;
+                    default:
+                        this.output(`Command not found: ${cmd}. Type 'help' for available commands.`);
+                }
+            }
+            
+            addNewInputLine() {
+                const newLine = document.createElement('div');
+                newLine.className = 'terminal-line';
+                newLine.innerHTML = `<span class="prompt"> ${this.currentDirectory}$</span> <input type="text" class="command-input">`;
+                
+                this.currentLine.parentNode.insertBefore(newLine, this.currentLine);
+                this.currentLine.remove();
+                this.currentLine = newLine;
+                this.commandInput = this.currentLine.querySelector('.command-input');
+                this.commandInput.focus();
+                
+                // Add event listener to the new input
+                this.commandInput.addEventListener('keydown', (e) => {
+                    if (this.isEditing) return;
+                    
+                    if (e.key === 'Enter') {
+                        this.executeCommand();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.navigateHistory(-1);
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this.navigateHistory(1);
+                    } else if (e.key === 'Tab') {
+                        e.preventDefault();
+                        this.autoComplete();
+                    }
+                });
+            }
+            
+            navigateHistory(direction) {
+                if (this.history.length === 0) return;
+                
+                this.historyIndex += direction;
+                
+                if (this.historyIndex < 0) {
+                    this.historyIndex = 0;
+                } else if (this.historyIndex >= this.history.length) {
+                    this.historyIndex = this.history.length;
+                    this.commandInput.value = '';
+                    return;
+                }
+                
+                this.commandInput.value = this.history[this.historyIndex];
+            }
+            
+            autoComplete() {
+                // Basic auto-complete for directories and files
+                const input = this.commandInput.value;
+                const parts = input.split(' ');
+                const lastPart = parts[parts.length - 1];
+                
+                if (lastPart.includes('/')) {
+                    // Path completion
+                    const pathParts = lastPart.split('/');
+                    const dirPath = pathParts.slice(0, -1).join('/');
+                    const partialName = pathParts[pathParts.length - 1];
+                    
+                    const dir = this.resolvePath(dirPath || '.');
+                    if (dir && dir.type === 'directory') {
+                        const matches = Object.keys(dir.children).filter(name => 
+                            name.startsWith(partialName)
+                        );
+                        
+                        if (matches.length === 1) {
+                            pathParts[pathParts.length - 1] = matches[0];
+                            parts[parts.length - 1] = pathParts.join('/');
+                            this.commandInput.value = parts.join(' ');
+                        } else if (matches.length > 1) {
+                            this.output(matches.join('  '));
+                        }
+                    }
+                } else {
+                    // Command completion
+                    const commands = ['help', 'clear', 'ls', 'pwd', 'cd', 'cat', 'echo', 'date', 'whoami', 'mkdir', 'touch', 'rm', 'find', 'calc', 'history', 'theme', 'py', 'cpp', 'edt'];
+                    const matches = commands.filter(cmd => cmd.startsWith(lastPart));
+                    
+                    if (matches.length === 1) {
+                        parts[parts.length - 1] = matches[0];
+                        this.commandInput.value = parts.join(' ');
+                    } else if (matches.length > 1) {
+                        this.output(matches.join('  '));
+                    }
+                }
+            }
+            
+            output(text, isHTML = false) {
+                const outputLine = document.createElement('div');
+                outputLine.className = 'terminal-output';
+                
+                if (isHTML) {
+                    outputLine.innerHTML = text;
+                } else {
+                    outputLine.textContent = text;
+                }
+                
+                this.currentLine.parentNode.insertBefore(outputLine, this.currentLine);
+            }
+            
+            showHelp() {
+                const helpText = `
+Available commands:
+  help      - Show this help message
+  clear     - Clear the terminal screen
+  ls        - List files and directories
+  pwd       - Show current directory
+  cd <dir>  - Change directory
+  cat <file>- Display file content
+  echo <text>- Print text to terminal
+  date      - Show current date and time
+  whoami    - Show current user
+  mkdir <dir>- Create a new directory
+  touch <file>- Create a new file
+  rm <file> - Remove a file or directory
+  find <name>- Search for files
+  calc <expr>- Simple calculator
+  history   - Show command history
+  theme <color>- Change terminal theme (green, blue, red, purple)
+  py <file> - Run Python code
+  cpp <file>- Compile and run C++ code
+  edt <file>- Edit a file
+                `.trim();
+                
+                this.output(helpText);
+            }
+            
+            clearTerminal() {
+                const outputs = this.terminalBody.querySelectorAll('.terminal-output, .terminal-line');
+                outputs.forEach(output => {
+                    if (output !== this.currentLine) {
+                        output.remove();
+                    }
+                });
+            }
+            
+            resolvePath(path) {
+                if (path === '' || path === '.') {
+                    path = this.currentDirectory;
+                }
+                
+                if (path === ' ') {
+                    return this.fileSystem[' '];
+                }
+                
+                const pathParts = path.split('/').filter(part => part !== '');
+                let current = this.fileSystem[' '];
+                
+                for (const part of pathParts) {
+                    if (part === '..') {
+                        // For simplicity, we don't implement parent directory navigation
+                        continue;
+                    }
+                    
+                    if (current.children && current.children[part]) {
+                        current = current.children[part];
+                    } else {
+                        return null;
+                    }
+                }
+                
+                return current;
+            }
+            
+            listFiles(args) {
+                const path = args[0] || this.currentDirectory;
+                const dir = this.resolvePath(path);
+                
+                if (!dir) {
+                    this.output(`ls: cannot access '${path}': No such file or directory`);
+                    return;
+                }
+                
+                if (dir.type !== 'directory') {
+                    this.output(`ls: '${path}' is not a directory`);
+                    return;
+                }
+                
+                if (!dir.children || Object.keys(dir.children).length === 0) {
+                    this.output('(empty directory)');
+                    return;
+                }
+                
+                const files = Object.keys(dir.children).map(name => {
+                    const item = dir.children[name];
+                    let icon = '📄';
+                    let className = 'file';
+                    
+                    if (item.type === 'directory') {
+                        icon = '📁';
+                        className = 'directory';
+                    } else if (name.endsWith('.sh') || name.endsWith('.exe')) {
+                        icon = '⚙️';
+                        className = 'executable';
+                    } else if (name.endsWith('.py')) {
+                        icon = '🐍';
+                        className = 'executable';
+                    } else if (name.endsWith('.cpp') || name.endsWith('.c')) {
+                        icon = '⚙️';
+                        className = 'executable';
+                    }
+                    
+                    return `<div class="file-item"><span class="file-icon">${icon}</span><span class="${className}">${name}</span></div>`;
+                }).join('');
+                
+                this.output(files, true);
+            }
+            
+            showCurrentDirectory() {
+                this.output(this.currentDirectory);
+            }
+            
+            changeDirectory(args) {
+                if (args.length === 0) {
+                    this.currentDirectory = ' ';
+                    return;
+                }
+                
+                const path = args[0];
+                const dir = this.resolvePath(path);
+                
+                if (!dir) {
+                    this.output(`cd: no such file or directory: ${path}`);
+                    return;
+                }
+                
+                if (dir.type !== 'directory') {
+                    this.output(`cd: ${path}: Not a directory`);
+                    return;
+                }
+                
+                // For simplicity, we only allow navigation within the home directory
+                if (path === ' ' || path.startsWith(' /')) {
+                    this.currentDirectory = path;
+                } else {
+                    this.output(`cd: ${path}: Permission denied`);
+                }
+            }
+            
+            showFileContent(args) {
+                if (args.length === 0) {
+                    this.output('cat: missing file operand');
+                    return;
+                }
+                
+                const path = args[0];
+                const file = this.resolvePath(path);
+                
+                if (!file) {
+                    this.output(`cat: ${path}: No such file or directory`);
+                    return;
+                }
+                
+                if (file.type !== 'file') {
+                    this.output(`cat: ${path}: Is a directory`);
+                    return;
+                }
+                
+                this.output(file.content || '(empty file)');
+            }
+            
+            echoText(args) {
+                this.output(args.join(' '));
+            }
+            
+            showDate() {
+                const now = new Date();
+                this.output(now.toString());
+            }
+            
+            showUser() {
+                this.output('tumcode');
+            }
+            
+            createDirectory(args) {
+                if (args.length === 0) {
+                    this.output('mkdir: missing operand');
+                    return;
+                }
+                
+                const dirName = args[0];
+                const currentDir = this.resolvePath(this.currentDirectory);
+                
+                if (!currentDir.children) {
+                    currentDir.children = {};
+                }
+                
+                if (currentDir.children[dirName]) {
+                    this.output(`mkdir: cannot create directory '${dirName}': File exists`);
+                    return;
+                }
+                
+                currentDir.children[dirName] = {
+                    type: 'directory',
+                    children: {}
+                };
+                
+                this.output(`Directory '${dirName}' created`);
+            }
+            
+            createFile(args) {
+                if (args.length === 0) {
+                    this.output('touch: missing file operand');
+                    return;
+                }
+                
+                const fileName = args[0];
+                const currentDir = this.resolvePath(this.currentDirectory);
+                
+                if (!currentDir.children) {
+                    currentDir.children = {};
+                }
+                
+                currentDir.children[fileName] = {
+                    type: 'file',
+                    content: ''
+                };
+                
+                this.output(`File '${fileName}' created`);
+            }
+            
+            removeFile(args) {
+                if (args.length === 0) {
+                    this.output('rm: missing operand');
+                    return;
+                }
+                
+                const fileName = args[0];
+                const currentDir = this.resolvePath(this.currentDirectory);
+                
+                if (!currentDir.children || !currentDir.children[fileName]) {
+                    this.output(`rm: cannot remove '${fileName}': No such file or directory`);
+                    return;
+                }
+                
+                delete currentDir.children[fileName];
+                this.output(`Removed '${fileName}'`);
+            }
+            
+            findFiles(args) {
+                if (args.length === 0) {
+                    this.output('find: missing search pattern');
+                    return;
+                }
+                
+                const pattern = args[0].toLowerCase();
+                const results = [];
+                
+                const search = (dir, path) => {
+                    if (!dir.children) return;
+                    
+                    for (const name in dir.children) {
+                        const fullPath = path === ' ' ? ` /${name}` : `${path}/${name}`;
+                        
+                        if (name.toLowerCase().includes(pattern)) {
+                            results.push(fullPath);
+                        }
+                        
+                        if (dir.children[name].type === 'directory') {
+                            search(dir.children[name], fullPath);
+                        }
+                    }
+                };
+                
+                search(this.fileSystem[' '], ' ');
+                
+                if (results.length > 0) {
+                    this.output(results.join('\n'));
+                } else {
+                    this.output('No files found');
+                }
+            }
+            
+            calculate(args) {
+                if (args.length === 0) {
+                    this.output('calc: missing expression');
+                    return;
+                }
+                
+                try {
+                    // Simple calculation - in a real terminal we'd need to be more careful
+                    const expression = args.join(' ');
+                    const result = eval(expression);
+                    this.output(`${expression} = ${result}`);
+                } catch (error) {
+                    this.output(`calc: invalid expression: ${args.join(' ')}`);
+                }
+            }
+            
+            showHistory() {
+                if (this.history.length === 0) {
+                    this.output('No command history');
+                    return;
+                }
+                
+                const historyText = this.history.map((cmd, index) => 
+                    `${index + 1}  ${cmd}`
+                ).join('\n');
+                
+                this.output(historyText);
+            }
+            
+            changeTheme(args) {
+                if (args.length === 0) {
+                    this.output('theme: missing color argument');
+                    this.output("Available colors: green, blue, red, purple");
+                    return;
+                }
+                
+                const color = args[0].toLowerCase();
+                const colors = {
+                    'green': '#00ff00',
+                    'blue': '#00a8ff',
+                    'red': '#ff5555',
+                    'purple': '#bd93f9'
+                };
+                
+                if (colors[color]) {
+                    document.documentElement.style.setProperty('--terminal-color', colors[color]);
+                    
+                    // Update all prompt elements
+                    const prompts = document.querySelectorAll('.prompt');
+                    prompts.forEach(prompt => {
+                        prompt.style.color = colors[color];
+                    });
+                    
+                    // Update header border
+                    document.querySelector('header').style.borderBottomColor = colors[color];
+                    
+                    // Update back button
+                    const backBtn = document.getElementById('back-btn');
+                    backBtn.style.borderColor = colors[color];
+                    backBtn.style.color = colors[color];
+                    
+                    this.output(`Terminal theme changed to ${color}`);
+                } else {
+                    this.output(`theme: invalid color '${color}'`);
+                    this.output("Available colors: green, blue, red, purple");
+                }
+            }
+            
+            runPython(args) {
+                if (args.length === 0) {
+                    this.output('py: missing file operand');
+                    return;
+                }
+                
+                const path = args[0];
+                const file = this.resolvePath(path);
+                
+                if (!file) {
+                    this.output(`py: ${path}: No such file or directory`);
+                    return;
+                }
+                
+                if (file.type !== 'file') {
+                    this.output(`py: ${path}: Is a directory`);
+                    return;
+                }
+                
+                if (!path.endsWith('.py')) {
+                    this.output(`py: ${path}: Not a Python file`);
+                    return;
+                }
+                
+                this.output(`Running Python script: ${path}`);
+                this.output('----------------------------------------');
+                
+                // Simple Python interpreter simulation
+                try {
+                    const code = file.content;
+                    const lines = code.split('\n');
+                    let output = '';
+                    
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        
+                        // Simulate print statements
+                        if (line.startsWith('print(') && line.endsWith(')')) {
+                            const content = line.substring(6, line.length - 1);
+                            // Remove quotes if present
+                            const printed = content.replace(/^["']|["']$/g, '');
+                            output += printed + '\n';
+                        }
+                        
+                        // Simulate simple arithmetic
+                        if (line.includes('=') && !line.includes('def ') && !line.startsWith('#')) {
+                            const parts = line.split('=');
+                            if (parts.length === 2) {
+                                const expr = parts[1].trim();
+                                if (expr.match(/^\d+[\+\-\*\/]\d+$/)) {
+                                    const result = eval(expr);
+                                    // We don't output variable assignments, just simulate them
+                                }
+                            }
+                        }
+                        
+                        // Simulate function calls with f-strings
+                        if (line.includes('f"') && line.includes('{') && line.includes('}')) {
+                            const match = line.match(/f"([^"]*)"/);
+                            if (match) {
+                                const fstring = match[1];
+                                // Simple replacement for variables in f-strings
+                                let result = fstring;
+                                const vars = fstring.match(/\{([^}]+)\}/g);
+                                if (vars) {
+                                    vars.forEach(v => {
+                                        const varName = v.substring(1, v.length - 1);
+                                        // In a real implementation, we'd track variables
+                                        // For simulation, just show the variable name
+                                        result = result.replace(v, `[${varName}]`);
+                                    });
+                                }
+                                output += result + '\n';
+                            }
+                        }
+                    }
+                    
+                    if (output === '') {
+                        output = '(No output)';
+                    }
+                    
+                    this.output(output);
+                    this.output('----------------------------------------');
+                    this.output('Python execution completed.');
+                } catch (error) {
+                    this.output(`Error executing Python: ${error.message}`);
+                }
+            }
+            
+            runCpp(args) {
+                if (args.length === 0) {
+                    this.output('cpp: missing file operand');
+                    return;
+                }
+                
+                const path = args[0];
+                const file = this.resolvePath(path);
+                
+                if (!file) {
+                    this.output(`cpp: ${path}: No such file or directory`);
+                    return;
+                }
+                
+                if (file.type !== 'file') {
+                    this.output(`cpp: ${path}: Is a directory`);
+                    return;
+                }
+                
+                if (!path.endsWith('.cpp')) {
+                    this.output(`cpp: ${path}: Not a C++ file`);
+                    return;
+                }
+                
+                this.output(`Compiling C++ program: ${path}`);
+                this.output('g++ -o program ' + path + ' -std=c++11');
+                this.output('----------------------------------------');
+                
+                // Simple C++ output simulation
+                try {
+                    const code = file.content;
+                    
+                    // Look for cout statements
+                    const coutMatches = code.match(/std::cout\s*<<\s*[^;]*;/g) || [];
+                    let output = '';
+                    
+                    coutMatches.forEach(coutLine => {
+                        // Extract the content between << and ;
+                        const contentMatch = coutLine.match(/std::cout\s*<<\s*([^;]*);/);
+                        if (contentMatch) {
+                            const content = contentMatch[1];
+                            // Remove extra spaces and newlines
+                            const cleanContent = content.replace(/\s+/g, ' ').trim();
+                            
+                            // Handle endl
+                            if (cleanContent.includes('std::endl')) {
+                                output += cleanContent.replace(/std::endl/g, '') + '\n';
+                            } else {
+                                output += cleanContent + ' ';
+                            }
+                        }
+                    });
+                    
+                    // Clean up the output
+                    output = output.replace(/"<<"/g, '').replace(/"\s*<<\s*"/g, '');
+                    output = output.replace(/\\n/g, '\n').trim();
+                    
+                    if (output === '') {
+                        output = '(No output)';
+                    }
+                    
+                    this.output(output);
+                    this.output('----------------------------------------');
+                    this.output('Program executed successfully.');
+                } catch (error) {
+                    this.output(`Error compiling/running C++: ${error.message}`);
+                }
+            }
+            
+            editFile(args) {
+                if (args.length === 0) {
+                    this.output('edt: missing file operand');
+                    return;
+                }
+                
+                const path = args[0];
+                const file = this.resolvePath(path);
+                
+                if (!file) {
+                    this.output(`edt: ${path}: No such file or directory`);
+                    return;
+                }
+                
+                if (file.type !== 'file') {
+                    this.output(`edt: ${path}: Is a directory`);
+                    return;
+                }
+                
+                this.isEditing = true;
+                this.editorFile = file;
+                
+                // Create editor interface
+                const editorContainer = document.createElement('div');
+                editorContainer.className = 'editor-container';
+                
+                const editorHeader = document.createElement('div');
+                editorHeader.className = 'editor-header';
+                editorHeader.innerHTML = `Editing: ${path} (Press Ctrl+S to save, Ctrl+Q to cancel)`;
+                
+                const editorBody = document.createElement('div');
+                editorBody.className = 'editor-body';
+                
+                const textarea = document.createElement('textarea');
+                textarea.className = 'editor-textarea';
+                textarea.value = file.content || '';
+                
+                const buttons = document.createElement('div');
+                buttons.className = 'editor-buttons';
+                
+                const saveBtn = document.createElement('button');
+                saveBtn.className = 'editor-btn save';
+                saveBtn.textContent = 'Save (Ctrl+S)';
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.className = 'editor-btn';
+                cancelBtn.textContent = 'Cancel (Ctrl+Q)';
+                
+                buttons.appendChild(cancelBtn);
+                buttons.appendChild(saveBtn);
+                
+                editorBody.appendChild(textarea);
+                editorBody.appendChild(buttons);
+                
+                editorContainer.appendChild(editorHeader);
+                editorContainer.appendChild(editorBody);
+                
+                this.currentLine.parentNode.insertBefore(editorContainer, this.currentLine);
+                
+                // Focus on textarea
+                textarea.focus();
+                
+                // Event listeners
+                const saveFile = () => {
+                    file.content = textarea.value;
+                    editorContainer.remove();
+                    this.isEditing = false;
+                    this.editorFile = null;
+                    this.output(`File '${path}' saved.`);
+                    this.saveToStorage();
+                    this.commandInput.focus();
+                };
+                
+                const cancelEdit = () => {
+                    editorContainer.remove();
+                    this.isEditing = false;
+                    this.editorFile = null;
+                    this.output('Edit canceled.');
+                    this.commandInput.focus();
+                };
+                
+                saveBtn.addEventListener('click', saveFile);
+                cancelBtn.addEventListener('click', cancelEdit);
+                
+                textarea.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 's') {
+                        e.preventDefault();
+                        saveFile();
+                    } else if (e.ctrlKey && e.key === 'q') {
+                        e.preventDefault();
+                        cancelEdit();
+                    }
+                });
+            }
+        }
+        
+        // Initialize the terminal when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new Terminal();
+            
+            // Add CSS variable for theme color
+            document.documentElement.style.setProperty('--terminal-color', '#00ff00');
+        });
+    </script>
+</body>
+</html>
