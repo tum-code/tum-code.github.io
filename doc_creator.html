@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TumCode Universal Document Creator - Create any document with any extension">
+    <meta name="keywords" content="document creator, universal, coding, AI, files">
+    <meta name="author" content="Golden Apple Technologies">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="TumCode Universal Document Creator">
+    <meta property="og:description" content="Create any document with any extension using AI assistance">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Universal Document Creator - TumCode</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body.dark {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #000000;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark header {
+            background-color: #000000;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+        }
+        
+        #hdLogo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        #hdLogo span {
+            color: #000000;
+        }
+        
+        body.dark #hdLogo span {
+            color: #ffffff;
+        }
+        
+        /* Menu Button */
+        #menubtn {
+            background: none;
+            border: 2px solid #000000;
+            font-size: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        body.dark #menubtn {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #menubtn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark #menubtn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Main Menu Sidebar */
+        #menu {
+            position: fixed;
+            top: 0;
+            left: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-right: 2px solid #000000;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark #menu {
+            background-color: #000000;
+            border-right: 2px solid #ffffff;
+            box-shadow: 2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #menu.active {
+            left: 0;
+        }
+        
+        #menuext {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #menuext {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        .menu-content {
+            padding: 60px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .menu-content button {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        body.dark .menu-content button {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+        
+        .menu-content button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .menu-content button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Settings Sidebar */
+        #settings {
+            position: fixed;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-left: 2px solid #000000;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 60px 30px 30px;
+        }
+        
+        body.dark #settings {
+            background-color: #000000;
+            border-left: 2px solid #ffffff;
+            box-shadow: -2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #settings.active {
+            right: 0;
+        }
+        
+        #settings-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #settings-close {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #themeset {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark #themeset {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        #themeset:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark #themeset:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Document Creator Styles */
+        .doc-creator-container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+        
+        /* Toolbar */
+        .toolbar {
+            background-color: #f5f5f5;
+            border-bottom: 2px solid #000000;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        body.dark .toolbar {
+            background-color: #111111;
+            border-bottom: 2px solid #ffffff;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropbtn {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        body.dark .dropbtn {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+        
+        .dropbtn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .dropbtn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+        
+        body.dark .dropdown-content {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            box-shadow: 0 8px 16px rgba(255,255,255,0.1);
+        }
+        
+        .dropdown-content a {
+            color: #000000;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #000000;
+            cursor: pointer;
+        }
+        
+        body.dark .dropdown-content a {
+            color: #ffffff;
+            border-bottom: 1px solid #ffffff;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .dropdown-content a:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* AI Mode Switch */
+        .ai-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .ai-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .ai-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            transition: .4s;
+            border-radius: 30px;
+        }
+        
+        body.dark .ai-slider {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        .ai-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #000000;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        body.dark .ai-slider:before {
+            background-color: #ffffff;
+        }
+        
+        input:checked + .ai-slider {
+            background-color: #000000;
+        }
+        
+        body.dark input:checked + .ai-slider {
+            background-color: #ffffff;
+        }
+        
+        input:checked + .ai-slider:before {
+            transform: translateX(30px);
+            background-color: #ffffff;
+        }
+        
+        body.dark input:checked + .ai-slider:before {
+            background-color: #000000;
+        }
+        
+        .ai-switch-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+        
+        /* Files Sidebar */
+        .files-sidebar {
+            width: 0;
+            background-color: #f5f5f5;
+            border-right: 2px solid #000000;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+        
+        body.dark .files-sidebar {
+            background-color: #111111;
+            border-right: 2px solid #ffffff;
+        }
+        
+        .files-sidebar.active {
+            width: 70%;
+        }
+        
+        .files-header {
+            padding: 15px;
+            border-bottom: 2px solid #000000;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        body.dark .files-header {
+            border-bottom: 2px solid #ffffff;
+        }
+        
+        .files-list {
+            padding: 10px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #000000;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        body.dark .file-item {
+            border: 1px solid #ffffff;
+        }
+        
+        .file-item:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .file-item:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .file-menu {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 100%;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            z-index: 10;
+            min-width: 120px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        body.dark .file-menu {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+        }
+        
+        .file-menu.active {
+            display: block;
+        }
+        
+        .file-menu-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #000000;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        body.dark .file-menu-item {
+            border-bottom: 1px solid #ffffff;
+        }
+        
+        .file-menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .file-menu-item:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .file-menu-item:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Editor Area */
+        .editor-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tabs-container {
+            display: flex;
+            background-color: #f5f5f5;
+            border-bottom: 2px solid #000000;
+            overflow-x: auto;
+        }
+        
+        body.dark .tabs-container {
+            background-color: #111111;
+            border-bottom: 2px solid #ffffff;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            border-right: 1px solid #000000;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        body.dark .tab {
+            border-right: 1px solid #ffffff;
+        }
+        
+        .tab.active {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .tab.active {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .close-tab {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: inherit;
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-toolbar {
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #000000;
+            display: flex;
+            gap: 10px;
+        }
+        
+        body.dark .editor-toolbar {
+            background-color: #111111;
+            border-bottom: 1px solid #ffffff;
+        }
+        
+        .editor {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark .editor {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        body.dark .modal-content {
+            background-color: #000000;
+            border: 2px solid #ffffff;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #000000;
+        }
+        
+        body.dark .modal-header {
+            border-bottom: 1px solid #ffffff;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .setting-item {
+            margin-bottom: 15px;
+        }
+        
+        .setting-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000000;
+            border-radius: 4px;
+        }
+        
+        body.dark .color-preview {
+            border: 1px solid #ffffff;
+        }
+        
+        .ai-prompt-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .ai-prompt-input {
+            padding: 10px;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 80px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark .ai-prompt-input {
+            border: 1px solid #ffffff;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Buttons - All buttons should match the theme */
+        button, input[type="button"], input[type="submit"] {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        body.dark button, body.dark input[type="button"], body.dark input[type="submit"] {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+        
+        button:hover, input[type="button"]:hover, input[type="submit"]:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark button:hover, body.dark input[type="button"]:hover, body.dark input[type="submit"]:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Range input styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        body.dark input[type="range"] {
+            background: #000000;
+            border: 1px solid #ffffff;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #000000;
+            border: 1px solid #000000;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        body.dark input[type="range"]::-webkit-slider-thumb {
+            background: #ffffff;
+            border: 1px solid #ffffff;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #000000;
+            border: 1px solid #000000;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        body.dark input[type="range"]::-moz-range-thumb {
+            background: #ffffff;
+            border: 1px solid #ffffff;
+        }
+        
+        /* Text input styling */
+        input[type="text"], textarea {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        body.dark input[type="text"], body.dark textarea {
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+        }
+        
+        /* Overlay for when menu/settings are open */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        body.dark .overlay {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #menu, #settings {
+                width: 80%;
+            }
+            
+            #menu {
+                left: -80%;
+            }
+            
+            #settings {
+                right: -80%;
+            }
+            
+            .files-sidebar.active {
+                width: 100%;
+            }
+            
+            header {
+                padding: 12px 15px;
+            }
+            
+            #hdLogo {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #menu, #settings {
+                width: 100%;
+            }
+            
+            #menu {
+                left: -100%;
+            }
+            
+            #settings {
+                right: -100%;
+            }
+            
+            .menu-content, #settings {
+                padding: 60px 15px 15px;
+            }
+            
+            .toolbar {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body id="body">
+    <!-- Overlay for closing menus -->
+    <div class="overlay" id="overlay"></div>
+    
+    <header>
+        <div id="header-content">
+            <div id="hdLogo">Tum<span>Code</span></div>
+        </div>
+        <input type="button" value="☰" id="menubtn">
+    </header>
+    
+    <!-- Main Menu Sidebar -->
+    <div id="menu">
+        <input type="button" value="&times;" id="menuext">
+        <div class="menu-content">
+            <button onclick="location.href='index.html'">Home</button>
+            <button>Projects</button>
+            <button onclick="location.href='docs.html'">Docs</button>
+            <button id="settings-btn">Settings</button>
+            <button>Feedback</button>
+        </div>
+    </div>
+    
+    <!-- Settings Sidebar -->
+    <div id="settings">
+        <input type="button" value="&times;" id="settings-close">
+        <h2>Settings</h2>
+        <button id="themeset">EYE CARE</button>
+    </div>
+    
+    <!-- Document Creator -->
+    <div class="doc-creator-container">
+        <!-- Files Sidebar -->
+        <div class="files-sidebar" id="filesSidebar">
+            <div class="files-header">Files</div>
+            <div class="files-list" id="filesList">
+                <!-- Files will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Editor Area -->
+        <div class="editor-area">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="dropdown">
+                    <button class="dropbtn">Document</button>
+                    <div class="dropdown-content">
+                        <a id="settingsOption">Settings</a>
+                        <a id="filesOption">Files</a>
+                        <a id="newFileOption">New File</a>
+                        <a id="saveOption">Save</a>
+                    </div>
+                </div>
+                <div class="ai-switch-label">
+                    AI Mode
+                    <label class="ai-switch">
+                        <input type="checkbox" id="aiModeToggle">
+                        <span class="ai-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="tabs-container" id="tabsContainer">
+                <!-- Tabs will be populated by JavaScript -->
+            </div>
+            
+            <!-- Editor -->
+            <div class="editor-container">
+                <div class="editor-toolbar">
+                    <button id="insertColorBtn">Insert Color</button>
+                    <button id="aiGenerateBtn">AI Generate</button>
+                </div>
+                <textarea class="editor" id="editor" placeholder="Start typing your document..."></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editor Settings</h2>
+                <button class="close-modal" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label class="setting-label">Font Size</label>
+                    <input type="range" id="fontSize" min="10" max="24" value="14">
+                    <span id="fontSizeValue">14px</span>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">Color Picker</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="colorPicker" value="#000000">
+                        <div class="color-preview" id="colorPreview"></div>
+                        <span id="colorValue">#000000</span>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label class="setting-label">AI Mode</label>
+                    <div class="ai-switch-label">
+                        Enable AI Code Generation
+                        <label class="ai-switch">
+                            <input type="checkbox" id="aiModeSetting">
+                            <span class="ai-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="setting-item" id="aiPromptSection">
+                    <label class="setting-label">AI Prompt</label>
+                    <div class="ai-prompt-container">
+                        <textarea class="ai-prompt-input" id="aiPrompt" placeholder="Describe the code you want to generate..."></textarea>
+                        <button id="generateWithAI">Generate Code</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="applySettings">Apply</button>
+                <button id="cancelSettings">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Universal Document Creator JavaScript
+
+// Global variables
+let files = JSON.parse(localStorage.getItem('udcFiles')) || [];
+let openTabs = JSON.parse(localStorage.getItem('udcOpenTabs')) || [];
+let activeTabId = localStorage.getItem('udcActiveTabId') || null;
+let aiMode = localStorage.getItem('udcAiMode') === 'true';
+let editorSettings = JSON.parse(localStorage.getItem('udcEditorSettings')) || {
+    fontSize: 14,
+    theme: 'light'
+};
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupEventListeners();
+    loadFiles();
+    loadTabs();
+    applyEditorSettings();
+});
+
+// Initialize the application
+function initializeApp() {
+    // Set AI mode toggle state
+    document.getElementById('aiModeToggle').checked = aiMode;
+    document.getElementById('aiModeSetting').checked = aiMode;
+    
+    // Update color preview
+    updateColorPreview();
+    
+    // Show/hide AI prompt section based on AI mode
+    document.getElementById('aiPromptSection').style.display = aiMode ? 'block' : 'none';
+}
+
+// Set up event listeners
+function setupEventListeners() {
+    // Menu and settings functionality
+    setupMenuAndSettings();
+    
+    // Theme toggle functionality
+    setupThemeToggle();
+    
+    // Document creator functionality
+    setupDocumentCreator();
+    
+    // Settings modal functionality
+    setupSettingsModal();
+    
+    // Close file menus when clicking elsewhere
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.file-item') && !e.target.closest('.file-menu')) {
+            closeAllFileMenus();
+        }
+    });
+}
+
+// Menu and settings functionality
+function setupMenuAndSettings() {
+    const menu = document.getElementById('menu');
+    const settings = document.getElementById('settings');
+    const menuBtn = document.getElementById('menubtn');
+    const menuExt = document.getElementById('menuext');
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsClose = document.getElementById('settings-close');
+    const overlay = document.getElementById('overlay');
+    
+    function closeAllMenus() {
+        menu.classList.remove('active');
+        settings.classList.remove('active');
+        overlay.style.display = 'none';
+    }
+    
+    menuBtn.addEventListener('click', () => {
+        menu.classList.add('active');
+        overlay.style.display = 'block';
+    });
+    
+    menuExt.addEventListener('click', closeAllMenus);
+    
+    settingsBtn.addEventListener('click', () => {
+        settings.classList.add('active');
+        menu.classList.remove('active');
+    });
+    
+    settingsClose.addEventListener('click', closeAllMenus);
+    
+    overlay.addEventListener('click', closeAllMenus);
+}
+
+// Theme toggle functionality
+function setupThemeToggle() {
+    const body = document.getElementById('body');
+    const toggleButton = document.getElementById('themeset');
+    let isDarkMode = localStorage.getItem('udcDarkMode') === 'true';
+
+    // Set initial theme
+    if (isDarkMode) {
+        body.classList.add('dark');
+        toggleButton.textContent = 'EYE CARE ✓';
+    } else {
+        body.classList.remove('dark');
+        toggleButton.textContent = 'EYE CARE';
+    }
+
+    toggleButton.addEventListener('click', () => {
+        if (isDarkMode) {
+            body.classList.remove('dark');
+            toggleButton.textContent = 'EYE CARE';
+            localStorage.setItem('udcDarkMode', 'false');
+        } else {
+            body.classList.add('dark');
+            toggleButton.textContent = 'EYE CARE ✓';
+            localStorage.setItem('udcDarkMode', 'true');
+        }
+        isDarkMode = !isDarkMode;
+    });
+}
+
+// Document creator functionality
+function setupDocumentCreator() {
+    // Document menu options
+    document.getElementById('settingsOption').addEventListener('click', openSettingsModal);
+    document.getElementById('filesOption').addEventListener('click', toggleFilesSidebar);
+    document.getElementById('newFileOption').addEventListener('click', createNewFile);
+    document.getElementById('saveOption').addEventListener('click', saveCurrentFile);
+    
+    // AI mode toggle
+    document.getElementById('aiModeToggle').addEventListener('change', function() {
+        aiMode = this.checked;
+        localStorage.setItem('udcAiMode', aiMode.toString());
+        document.getElementById('aiModeSetting').checked = aiMode;
+        document.getElementById('aiPromptSection').style.display = aiMode ? 'block' : 'none';
+    });
+    
+    // Editor buttons
+    document.getElementById('insertColorBtn').addEventListener('click', insertColorCode);
+    document.getElementById('aiGenerateBtn').addEventListener('click', openAIPrompt);
+    
+    // Editor content change
+    document.getElementById('editor').addEventListener('input', function() {
+        if (activeTabId) {
+            const tab = openTabs.find(tab => tab.id === activeTabId);
+            if (tab) {
+                tab.content = this.value;
+                tab.unsaved = true;
+                updateTabTitle(tab.id);
+                saveTabsToStorage();
+            }
+        }
+    });
+    
+    // Handle beforeunload to warn about unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        const unsavedTabs = openTabs.filter(tab => tab.unsaved);
+        if (unsavedTabs.length > 0) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+}
+
+// Settings modal functionality
+function setupSettingsModal() {
+    const settingsModal = document.getElementById('settingsModal');
+    const closeSettingsModal = document.getElementById('closeSettingsModal');
+    const applySettings = document.getElementById('applySettings');
+    const cancelSettings = document.getElementById('cancelSettings');
+    const fontSizeSlider = document.getElementById('fontSize');
+    const fontSizeValue = document.getElementById('fontSizeValue');
+    const colorPicker = document.getElementById('colorPicker');
+    const aiModeSetting = document.getElementById('aiModeSetting');
+    const generateWithAI = document.getElementById('generateWithAI');
+    
+    // Font size slider
+    fontSizeSlider.addEventListener('input', function() {
+        fontSizeValue.textContent = `${this.value}px`;
+    });
+    
+    // Color picker
+    colorPicker.addEventListener('input', updateColorPreview);
+    
+    // AI mode setting
+    aiModeSetting.addEventListener('change', function() {
+        aiMode = this.checked;
+        localStorage.setItem('udcAiMode', aiMode.toString());
+        document.getElementById('aiModeToggle').checked = aiMode;
+        document.getElementById('aiPromptSection').style.display = aiMode ? 'block' : 'none';
+    });
+    
+    // Generate with AI button
+    generateWithAI.addEventListener('click', generateCodeWithAI);
+    
+    // Modal controls
+    closeSettingsModal.addEventListener('click', closeSettingsModalFunc);
+    cancelSettings.addEventListener('click', closeSettingsModalFunc);
+    
+    applySettings.addEventListener('click', function() {
+        applyEditorSettingsFromModal();
+        closeSettingsModalFunc();
+    });
+    
+    // Close modal when clicking outside
+    settingsModal.addEventListener('click', function(e) {
+        if (e.target === settingsModal) {
+            closeSettingsModalFunc();
+        }
+    });
+}
+
+// Update color preview
+function updateColorPreview() {
+    const colorPicker = document.getElementById('colorPicker');
+    const colorPreview = document.getElementById('colorPreview');
+    const colorValue = document.getElementById('colorValue');
+    
+    const color = colorPicker.value;
+    colorPreview.style.backgroundColor = color;
+    colorValue.textContent = color;
+}
+
+// Open settings modal
+function openSettingsModal() {
+    const settingsModal = document.getElementById('settingsModal');
+    settingsModal.style.display = 'flex';
+    
+    // Set current values
+    document.getElementById('fontSize').value = editorSettings.fontSize;
+    document.getElementById('fontSizeValue').textContent = `${editorSettings.fontSize}px`;
+}
+
+// Close settings modal
+function closeSettingsModalFunc() {
+    const settingsModal = document.getElementById('settingsModal');
+    settingsModal.style.display = 'none';
+}
+
+// Apply editor settings from modal
+function applyEditorSettingsFromModal() {
+    const fontSize = parseInt(document.getElementById('fontSize').value);
+    
+    editorSettings.fontSize = fontSize;
+    localStorage.setItem('udcEditorSettings', JSON.stringify(editorSettings));
+    
+    applyEditorSettings();
+}
+
+// Apply editor settings
+function applyEditorSettings() {
+    const editor = document.getElementById('editor');
+    editor.style.fontSize = `${editorSettings.fontSize}px`;
+}
+
+// Toggle files sidebar
+function toggleFilesSidebar() {
+    const filesSidebar = document.getElementById('filesSidebar');
+    filesSidebar.classList.toggle('active');
+}
+
+// Create new file
+function createNewFile() {
+    const newFileId = 'file_' + Date.now();
+    const newTab = {
+        id: newFileId,
+        name: 'untitled',
+        extension: '',
+        content: '',
+        unsaved: true
+    };
+    
+    openTabs.push(newTab);
+    activeTabId = newFileId;
+    
+    updateTabsDisplay();
+    updateEditorContent();
+    saveTabsToStorage();
+    
+    // Close files sidebar if open
+    document.getElementById('filesSidebar').classList.remove('active');
+}
+
+// Save current file
+function saveCurrentFile() {
+    if (!activeTabId) return;
+    
+    const tab = openTabs.find(tab => tab.id === activeTabId);
+    if (!tab) return;
+    
+    let fileName = tab.name;
+    let fileExtension = tab.extension;
+    
+    // If this is a new file, prompt for name
+    if (fileName === 'untitled' || !fileExtension) {
+        const fullName = prompt('Enter file name with extension (e.g., document.txt):', 'untitled.txt');
+        if (!fullName) return;
+        
+        const lastDotIndex = fullName.lastIndexOf('.');
+        if (lastDotIndex === -1) {
+            fileName = fullName;
+            fileExtension = '';
+        } else {
+            fileName = fullName.substring(0, lastDotIndex);
+            fileExtension = fullName.substring(lastDotIndex + 1);
+        }
+    }
+    
+    // Update tab info
+    tab.name = fileName;
+    tab.extension = fileExtension;
+    tab.unsaved = false;
+    
+    // Save to files list
+    const existingFileIndex = files.findIndex(file => file.id === tab.id);
+    if (existingFileIndex !== -1) {
+        files[existingFileIndex] = {
+            id: tab.id,
+            name: fileName,
+            extension: fileExtension,
+            content: tab.content,
+            lastModified: new Date().toISOString()
+        };
+    } else {
+        files.push({
+            id: tab.id,
+            name: fileName,
+            extension: fileExtension,
+            content: tab.content,
+            lastModified: new Date().toISOString()
+        });
+    }
+    
+    // Update displays and storage
+    updateTabsDisplay();
+    updateFilesList();
+    saveFilesToStorage();
+    saveTabsToStorage();
+    
+    // Close the tab
+    closeTab(tab.id);
+}
+
+// Load files from storage
+function loadFiles() {
+    updateFilesList();
+}
+
+// Load tabs from storage
+function loadTabs() {
+    if (openTabs.length > 0) {
+        updateTabsDisplay();
+        if (activeTabId) {
+            switchToTab(activeTabId);
+        } else {
+            switchToTab(openTabs[0].id);
+        }
+    }
+}
+
+// Update files list display
+function updateFilesList() {
+    const filesList = document.getElementById('filesList');
+    filesList.innerHTML = '';
+    
+    if (files.length === 0) {
+        filesList.innerHTML = '<p>No files saved yet.</p>';
+        return;
+    }
+    
+    files.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.dataset.fileId = file.id;
+        
+        const fileName = document.createElement('div');
+        fileName.className = 'file-name';
+        fileName.textContent = file.extension ? `${file.name}.${file.extension}` : file.name;
+        
+        // Create file menu
+        const fileMenu = document.createElement('div');
+        fileMenu.className = 'file-menu';
+        
+        const editOption = document.createElement('div');
+        editOption.className = 'file-menu-item';
+        editOption.textContent = 'Edit';
+        editOption.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openFileForEditing(file.id);
+            closeAllFileMenus();
+        });
+        
+        const downloadOption = document.createElement('div');
+        downloadOption.className = 'file-menu-item';
+        downloadOption.textContent = 'Download';
+        downloadOption.addEventListener('click', (e) => {
+            e.stopPropagation();
+            downloadFile(file.id);
+            closeAllFileMenus();
+        });
+        
+        const shareOption = document.createElement('div');
+        shareOption.className = 'file-menu-item';
+        shareOption.textContent = 'Share';
+        shareOption.addEventListener('click', (e) => {
+            e.stopPropagation();
+            shareFile(file.id);
+            closeAllFileMenus();
+        });
+        
+        const deleteOption = document.createElement('div');
+        deleteOption.className = 'file-menu-item';
+        deleteOption.textContent = 'Delete';
+        deleteOption.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteFile(file.id);
+            closeAllFileMenus();
+        });
+        
+        fileMenu.appendChild(editOption);
+        fileMenu.appendChild(downloadOption);
+        fileMenu.appendChild(shareOption);
+        fileMenu.appendChild(deleteOption);
+        
+        fileItem.appendChild(fileName);
+        fileItem.appendChild(fileMenu);
+        
+        // Add click event to show menu
+        fileItem.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Close all other menus
+            closeAllFileMenus();
+            
+            // Toggle this menu
+            const menu = this.querySelector('.file-menu');
+            menu.classList.toggle('active');
+        });
+        
+        filesList.appendChild(fileItem);
+    });
+}
+
+// Close all file menus
+function closeAllFileMenus() {
+    const allMenus = document.querySelectorAll('.file-menu');
+    allMenus.forEach(menu => {
+        menu.classList.remove('active');
+    });
+}
+
+// Update tabs display
+function updateTabsDisplay() {
+    const tabsContainer = document.getElementById('tabsContainer');
+    tabsContainer.innerHTML = '';
+    
+    openTabs.forEach(tab => {
+        const tabElement = document.createElement('div');
+        tabElement.className = `tab ${tab.id === activeTabId ? 'active' : ''}`;
+        tabElement.dataset.tabId = tab.id;
+        
+        const tabName = document.createElement('span');
+        tabName.className = 'tab-name';
+        tabName.textContent = getTabDisplayName(tab);
+        
+        const closeTabBtn = document.createElement('button');
+        closeTabBtn.className = 'close-tab';
+        closeTabBtn.innerHTML = '&times;';
+        closeTabBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeTab(tab.id);
+        });
+        
+        tabElement.appendChild(tabName);
+        tabElement.appendChild(closeTabBtn);
+        
+        tabElement.addEventListener('click', () => {
+            switchToTab(tab.id);
+        });
+        
+        tabsContainer.appendChild(tabElement);
+    });
+}
+
+// Get tab display name
+function getTabDisplayName(tab) {
+    let name = tab.name;
+    if (tab.extension) {
+        name += '.' + tab.extension;
+    }
+    if (tab.unsaved) {
+        name += ' *';
+    }
+    return name;
+}
+
+// Update tab title
+function updateTabTitle(tabId) {
+    const tabElement = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+    if (tabElement) {
+        const tab = openTabs.find(tab => tab.id === tabId);
+        if (tab) {
+            const tabName = tabElement.querySelector('.tab-name');
+            tabName.textContent = getTabDisplayName(tab);
+        }
+    }
+}
+
+// Update editor content
+function updateEditorContent() {
+    const editor = document.getElementById('editor');
+    
+    if (activeTabId) {
+        const tab = openTabs.find(tab => tab.id === activeTabId);
+        if (tab) {
+            editor.value = tab.content;
+            editor.disabled = false;
+            return;
+        }
+    }
+    
+    editor.value = '';
+    editor.disabled = true;
+}
+
+// Switch to tab
+function switchToTab(tabId) {
+    activeTabId = tabId;
+    localStorage.setItem('udcActiveTabId', activeTabId);
+    updateTabsDisplay();
+    updateEditorContent();
+}
+
+// Close tab
+function closeTab(tabId) {
+    const tabIndex = openTabs.findIndex(tab => tab.id === tabId);
+    if (tabIndex === -1) return;
+    
+    const tab = openTabs[tabIndex];
+    
+    // Check if there are unsaved changes
+    if (tab.unsaved) {
+        const confirmClose = confirm('You have unsaved changes. Do you want to save before closing?');
+        if (confirmClose) {
+            // Save the file
+            let fileName = tab.name;
+            let fileExtension = tab.extension;
+            
+            if (fileName === 'untitled' || !fileExtension) {
+                const fullName = prompt('Enter file name with extension (e.g., document.txt):', 'untitled.txt');
+                if (!fullName) return; // User canceled
+                
+                const lastDotIndex = fullName.lastIndexOf('.');
+                if (lastDotIndex === -1) {
+                    fileName = fullName;
+                    fileExtension = '';
+                } else {
+                    fileName = fullName.substring(0, lastDotIndex);
+                    fileExtension = fullName.substring(lastDotIndex + 1);
+                }
+            }
+            
+            // Update tab info
+            tab.name = fileName;
+            tab.extension = fileExtension;
+            tab.unsaved = false;
+            
+            // Save to files list
+            const existingFileIndex = files.findIndex(file => file.id === tab.id);
+            if (existingFileIndex !== -1) {
+                files[existingFileIndex] = {
+                    id: tab.id,
+                    name: fileName,
+                    extension: fileExtension,
+                    content: tab.content,
+                    lastModified: new Date().toISOString()
+                };
+            } else {
+                files.push({
+                    id: tab.id,
+                    name: fileName,
+                    extension: fileExtension,
+                    content: tab.content,
+                    lastModified: new Date().toISOString()
+                });
+            }
+            
+            saveFilesToStorage();
+        }
+    }
+    
+    // Remove the tab
+    openTabs.splice(tabIndex, 1);
+    
+    // Update active tab
+    if (openTabs.length > 0) {
+        if (activeTabId === tabId) {
+            activeTabId = openTabs[Math.max(0, tabIndex - 1)].id;
+        }
+    } else {
+        activeTabId = null;
+    }
+    
+    // Update displays and storage
+    updateTabsDisplay();
+    updateEditorContent();
+    updateFilesList();
+    saveTabsToStorage();
+}
+
+// Open file for editing
+function openFileForEditing(fileId) {
+    const file = files.find(file => file.id === fileId);
+    if (!file) return;
+    
+    // Check if file is already open
+    const existingTab = openTabs.find(tab => tab.id === fileId);
+    if (existingTab) {
+        switchToTab(fileId);
+        return;
+    }
+    
+    // Create new tab for the file
+    const newTab = {
+        id: file.id,
+        name: file.name,
+        extension: file.extension,
+        content: file.content,
+        unsaved: false
+    };
+    
+    openTabs.push(newTab);
+    activeTabId = fileId;
+    
+    updateTabsDisplay();
+    updateEditorContent();
+    saveTabsToStorage();
+    
+    // Close files sidebar
+    document.getElementById('filesSidebar').classList.remove('active');
+}
+
+// Download file
+function downloadFile(fileId) {
+    const file = files.find(file => file.id === fileId);
+    if (!file) return;
+    
+    const fileName = file.extension ? `${file.name}.${file.extension}` : file.name;
+    const content = file.content;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Share file
+function shareFile(fileId) {
+    const file = files.find(file => file.id === fileId);
+    if (!file) return;
+    
+    const fileName = file.extension ? `${file.name}.${file.extension}` : file.name;
+    const content = file.content;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const fileToShare = new File([blob], fileName, { type: 'text/plain' });
+    
+    if (navigator.share) {
+        navigator.share({
+            files: [fileToShare],
+            title: fileName,
+            text: `Check out this file: ${fileName}`
+        }).catch(error => {
+            console.log('Error sharing:', error);
+            alert('Sharing failed. Your browser might not support this feature.');
+        });
+    } else {
+        alert('Sharing is not supported in your browser. You can download the file instead.');
+    }
+}
+
+// Delete file
+function deleteFile(fileId) {
+    const confirmDelete = confirm('Are you sure you want to delete this file?');
+    if (!confirmDelete) return;
+    
+    // Remove from files list
+    files = files.filter(file => file.id !== fileId);
+    
+    // Close tab if open
+    const tabIndex = openTabs.findIndex(tab => tab.id === fileId);
+    if (tabIndex !== -1) {
+        openTabs.splice(tabIndex, 1);
+        
+        // Update active tab if needed
+        if (activeTabId === fileId) {
+            if (openTabs.length > 0) {
+                activeTabId = openTabs[Math.max(0, tabIndex - 1)].id;
+            } else {
+                activeTabId = null;
+            }
+        }
+        
+        updateTabsDisplay();
+        updateEditorContent();
+        saveTabsToStorage();
+    }
+    
+    updateFilesList();
+    saveFilesToStorage();
+}
+
+// Insert color code
+function insertColorCode() {
+    const color = document.getElementById('colorPicker').value;
+    const editor = document.getElementById('editor');
+    
+    // Get current cursor position
+    const start = editor.selectionStart;
+    const end = editor.selectionEnd;
+    
+    // Insert color code at cursor position
+    editor.value = editor.value.substring(0, start) + color + editor.value.substring(end);
+    
+    // Update cursor position
+    editor.selectionStart = start + color.length;
+    editor.selectionEnd = start + color.length;
+    
+    // Focus editor
+    editor.focus();
+    
+    // Update tab content
+    if (activeTabId) {
+        const tab = openTabs.find(tab => tab.id === activeTabId);
+        if (tab) {
+            tab.content = editor.value;
+            tab.unsaved = true;
+            updateTabTitle(tab.id);
+            saveTabsToStorage();
+        }
+    }
+}
+
+// Open AI prompt
+function openAIPrompt() {
+    if (!aiMode) {
+        alert('Please enable AI mode in settings first.');
+        return;
+    }
+    
+    openSettingsModal();
+    document.getElementById('aiPrompt').focus();
+}
+
+// Generate code with AI
+async function generateCodeWithAI() {
+    const prompt = document.getElementById('aiPrompt').value.trim();
+    if (!prompt) {
+        alert('Please enter a prompt for the AI.');
+        return;
+    }
+    
+    if (!aiMode) {
+        alert('AI mode is disabled. Please enable it in settings.');
+        return;
+    }
+    
+    try {
+        // Show loading state
+        const generateBtn = document.getElementById('generateWithAI');
+        const originalText = generateBtn.textContent;
+        generateBtn.textContent = 'Generating...';
+        generateBtn.disabled = true;
+        
+        // Encode the prompt for URL
+        const encodedPrompt = encodeURIComponent(prompt);
+        
+        // Make API request
+        const response = await fetch(`https://api.giftedtech.web.id/api/ai/gpt4o?apikey=gifted&q=${encodedPrompt}`);
+        
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.text();
+        
+        // Insert the generated code into the editor
+        const editor = document.getElementById('editor');
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        
+        editor.value = editor.value.substring(0, start) + data + editor.value.substring(end);
+        
+        // Update cursor position
+        editor.selectionStart = start + data.length;
+        editor.selectionEnd = start + data.length;
+        
+        // Focus editor
+        editor.focus();
+        
+        // Update tab content
+        if (activeTabId) {
+            const tab = openTabs.find(tab => tab.id === activeTabId);
+            if (tab) {
+                tab.content = editor.value;
+                tab.unsaved = true;
+                updateTabTitle(tab.id);
+                saveTabsToStorage();
+            }
+        }
+        
+        // Clear the prompt
+        document.getElementById('aiPrompt').value = '';
+        
+        // Close the modal
+        closeSettingsModalFunc();
+        
+    } catch (error) {
+        console.error('Error generating code with AI:', error);
+        alert('Failed to generate code with AI. Please try again.');
+    } finally {
+        // Restore button state
+        const generateBtn = document.getElementById('generateWithAI');
+        generateBtn.textContent = 'Generate Code';
+        generateBtn.disabled = false;
+    }
+}
+
+// Save files to storage
+function saveFilesToStorage() {
+    localStorage.setItem('udcFiles', JSON.stringify(files));
+}
+
+// Save tabs to storage
+function saveTabsToStorage() {
+    localStorage.setItem('udcOpenTabs', JSON.stringify(openTabs));
+    localStorage.setItem('udcActiveTabId', activeTabId);
+}
+    </script>
+</body>
+</html>
