@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TumCode GitHub Repository Downloader - Download repositories from GitHub using custom parameters">
+    <meta name="keywords" content="github, download, repository, tumcode, coding, tools">
+    <meta name="author" content="Golden Apple Technologies">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="TumCode GitHub Repository Downloader">
+    <meta property="og:description" content="Download GitHub repositories with custom parameters">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>GitHub Repository Downloader - TumCode</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            transition: all 0.3s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body.dark {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #000000;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark header {
+            background-color: #000000;
+            border-bottom: 2px solid #ffffff;
+            box-shadow: 0 2px 10px rgba(255,255,255,0.1);
+        }
+        
+        #hdLogo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        #hdLogo span {
+            color: #000000;
+        }
+        
+        body.dark #hdLogo span {
+            color: #ffffff;
+        }
+        
+        /* Menu Button */
+        #menubtn {
+            background: none;
+            border: 2px solid #000000;
+            font-size: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        body.dark #menubtn {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #menubtn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark #menubtn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Main Menu Sidebar */
+        #menu {
+            position: fixed;
+            top: 0;
+            left: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-right: 2px solid #000000;
+            z-index: 1000;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        body.dark #menu {
+            background-color: #000000;
+            border-right: 2px solid #ffffff;
+            box-shadow: 2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #menu.active {
+            left: 0;
+        }
+        
+        #menuext {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #menuext {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        .menu-content {
+            padding: 60px 30px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .menu-content button {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        body.dark .menu-content button {
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+        
+        .menu-content button:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .menu-content button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        /* Settings Sidebar */
+        #settings {
+            position: fixed;
+            top: 0;
+            right: -50%;
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            border-left: 2px solid #000000;
+            z-index: 1001;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            padding: 60px 30px 30px;
+        }
+        
+        body.dark #settings {
+            background-color: #000000;
+            border-left: 2px solid #ffffff;
+            box-shadow: -2px 0 10px rgba(255,255,255,0.1);
+        }
+        
+        #settings.active {
+            right: 0;
+        }
+        
+        #settings-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: 2px solid #000000;
+            color: #000000;
+            font-size: 24px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        body.dark #settings-close {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+        }
+        
+        #themeset {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark #themeset {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        #themeset:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark #themeset:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Main Content */
+        .main-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .page-description {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        
+        /* Form Styles */
+        .form-container {
+            background-color: #f9f9f9;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        body.dark .form-container {
+            background-color: #111111;
+            border: 2px solid #ffffff;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark input[type="text"] {
+            border: 2px solid #ffffff;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #000000;
+        }
+        
+        body.dark input[type="text"]:focus {
+            box-shadow: 0 0 0 2px #ffffff;
+        }
+        
+        .form-hint {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #666666;
+        }
+        
+        body.dark .form-hint {
+            color: #aaaaaa;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        body.dark .btn {
+            border: 2px solid #ffffff;
+        }
+        
+        .btn-primary {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .btn-primary {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark .btn-primary:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark .btn-secondary {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        body.dark .btn-secondary:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        /* Result Section */
+        .result-container {
+            background-color: #f9f9f9;
+            border: 2px solid #000000;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        body.dark .result-container {
+            background-color: #111111;
+            border: 2px solid #ffffff;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .generated-link {
+            word-break: break-all;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark .generated-link {
+            background-color: #000000;
+            border: 1px solid #ffffff;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+        
+        body.dark .download-btn {
+            background-color: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+        }
+        
+        .download-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        body.dark .download-btn:hover {
+            background-color: #000000;
+            color: #ffffff;
+        }
+        
+        /* Overlay for when menu/settings are open */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        body.dark .overlay {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #menu, #settings {
+                width: 80%;
+            }
+            
+            #menu {
+                left: -80%;
+            }
+            
+            #settings {
+                right: -80%;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            header {
+                padding: 12px 15px;
+            }
+            
+            #hdLogo {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #menu, #settings {
+                width: 100%;
+            }
+            
+            #menu {
+                left: -100%;
+            }
+            
+            #settings {
+                right: -100%;
+            }
+            
+            .menu-content, #settings {
+                padding: 60px 15px 15px;
+            }
+            
+            .main-container {
+                width: 95%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body id="body">
+    <!-- Overlay for closing menus -->
+    <div class="overlay" id="overlay"></div>
+    
+    <header>
+        <div id="header-content">
+            <div id="hdLogo">Tum<span>Code</span></div>
+        </div>
+        <input type="button" value="☰" id="menubtn">
+    </header>
+    
+    <!-- Main Menu Sidebar -->
+    <div id="menu">
+        <input type="button" value="&times;" id="menuext">
+        <div class="menu-content">
+            <button onclick="location.href='index.html'">Home</button>
+            <button>Projects</button>
+            <button onclick="location.href='docs.html'">Docs</button>
+            <button id="settings-btn">Settings</button>
+            <button>Feedback</button>
+        </div>
+    </div>
+    
+    <!-- Settings Sidebar -->
+    <div id="settings">
+        <input type="button" value="&times;" id="settings-close">
+        <h2>Settings</h2>
+        <button id="themeset">EYE CARE</button>
+        <!-- Add more settings options here if needed -->
+    </div>
+    
+    <div class="main-container">
+        <h1 class="page-title">GitHub Repository Downloader</h1>
+        <p class="page-description">Generate download links for GitHub repositories using custom parameters</p>
+        
+        <div class="form-container">
+            <div class="form-group">
+                <label for="postType">Creator Username</label>
+                <input type="text" id="postType" placeholder="username">
+                <div class="form-hint">The Github User Who owns the repository</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="artKeyword">Repository name</label>
+                <input type="text" id="artKeyword" placeholder="repository-name">
+                <div class="form-hint">Github Repository Name </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="colorName">Branch </label>
+                <input type="text" id="colorName" placeholder="branch" value="main">
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" id="generateBtn">Generate Download Link</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset Form</button>
+            </div>
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <h2 class="result-title">Generated Download Link</h2>
+            <div class="generated-link" id="generatedLink"></div>
+            <a href="#" class="download-btn" id="downloadBtn" target="_blank">Download Repository</a>
+        </div>
+    </div>
+    
+    <script>
+        // Menu and settings functionality
+        function setupMenuAndSettings() {
+            const menu = document.getElementById('menu');
+            const settings = document.getElementById('settings');
+            const menuBtn = document.getElementById('menubtn');
+            const menuExt = document.getElementById('menuext');
+            const settingsBtn = document.getElementById('settings-btn');
+            const settingsClose = document.getElementById('settings-close');
+            const overlay = document.getElementById('overlay');
+            
+            function closeAllMenus() {
+                menu.classList.remove('active');
+                settings.classList.remove('active');
+                overlay.style.display = 'none';
+            }
+            
+            menuBtn.addEventListener('click', () => {
+                menu.classList.add('active');
+                overlay.style.display = 'block';
+            });
+            
+            menuExt.addEventListener('click', closeAllMenus);
+            
+            settingsBtn.addEventListener('click', () => {
+                settings.classList.add('active');
+                menu.classList.remove('active');
+            });
+            
+            settingsClose.addEventListener('click', closeAllMenus);
+            
+            overlay.addEventListener('click', closeAllMenus);
+        }
+
+        // Theme toggle functionality
+        function setupThemeToggle() {
+            const body = document.getElementById('body');
+            const toggleButton = document.getElementById('themeset');
+            let isDarkMode = false;
+
+            toggleButton.addEventListener('click', () => {
+                if (isDarkMode) {
+                    body.classList.remove('dark');
+                    toggleButton.textContent = 'EYE CARE';
+                } else {
+                    body.classList.add('dark');
+                    toggleButton.textContent = 'EYE CARE ✓';
+                }
+                isDarkMode = !isDarkMode;
+            });
+        }
+
+        // GitHub Repository Downloader functionality
+        function setupDownloader() {
+            const postTypeInput = document.getElementById('postType');
+            const artKeywordInput = document.getElementById('artKeyword');
+            const colorNameInput = document.getElementById('colorName');
+            const generateBtn = document.getElementById('generateBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const resultContainer = document.getElementById('resultContainer');
+            const generatedLink = document.getElementById('generatedLink');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Generate download link
+            generateBtn.addEventListener('click', () => {
+                const postType = postTypeInput.value.trim();
+                const artKeyword = artKeywordInput.value.trim();
+                let colorName = colorNameInput.value.trim();
+                
+                // Validate required fields
+                if (!postType || !artKeyword) {
+                    alert('Please fill in all required fields about the repository');
+                    return;
+                }
+                
+                // Use 'main' as default if color name is empty
+                if (!colorName) {
+                    colorName = 'main';
+                }
+                
+                // Generate the download link
+                const downloadLink = `https://github.com/${postType}/${artKeyword}/archive/refs/heads/${colorName}.zip`;
+                
+                // Display the result
+                generatedLink.textContent = downloadLink;
+                downloadBtn.href = downloadLink;
+                resultContainer.style.display = 'block';
+                
+                // Scroll to result
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Reset form
+            resetBtn.addEventListener('click', () => {
+                postTypeInput.value = '';
+                artKeywordInput.value = '';
+                colorNameInput.value = '';
+                resultContainer.style.display = 'none';
+            });
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            setupMenuAndSettings();
+            setupThemeToggle();
+            setupDownloader();
+        });
+    </script>
+</body>
+</html>
