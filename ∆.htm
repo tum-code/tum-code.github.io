@@ -1,11 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>✓ Done</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-    <iframe src="https://goldenapplecoders-coder.guthub.io" height="100%" width="100%" style="border: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0;"></iframe>
-</body>
-</html>
+<h1 style="color: red;">Restricted Access</h1>
+<script type="text/javascript">
+// Simple XOR encryption/decryption
+function xorEncryptDecrypt(text, key = 42) {
+    let result = '';
+    for (let i = 0; i < text.length; i++) {
+        result += String.fromCharCode(text.charCodeAt(i) ^ key);
+    }
+    return result;
+}
+
+
+const encryptedPasswords = [
+    xorEncryptDecrypt('kingkong', 42),
+    xorEncryptDecrypt('letmein', 42),
+    xorEncryptDecrypt('ninja', 42),
+    xorEncryptDecrypt('monkey', 42),
+    xorEncryptDecrypt('admin123!', 42),
+    xorEncryptDecrypt('shadow', 42),
+    xorEncryptDecrypt('qwerty', 42),
+    xorEncryptDecrypt(' ', 42),
+    xorEncryptDecrypt('hackme', 42)
+];
+
+function checkPassword() {
+    const userInput = prompt('Please enter access code to continue');
+    
+    if (userInput === null) {
+        // User cancelled - do nothing or show message
+        alert('Reload Page to try again');
+        return;
+    }
+    
+    // Check if input matches any of the valid passwords
+    let isValid = false;
+    for (let i = 0; i < encryptedPasswords.length; i++) {
+        const decryptedPassword = xorEncryptDecrypt(encryptedPasswords[i], 42);
+        if (userInput === decryptedPassword) {
+            isValid = true;
+            break;
+        }
+    }
+    
+    if (isValid) {
+        // Correct password - redirect to main page
+        location.href = 'https://tum-code.github.io/nec-web/•';
+    } else {
+        // Wrong password - show error and retry
+        alert('ERROR: Invalid access code!');
+        checkPassword();
+    }
+}
+
+// Start password validation
+checkPassword();
+</script>
